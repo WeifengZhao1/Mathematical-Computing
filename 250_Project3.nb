@@ -1,0 +1,1028 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     51156,       1020]
+NotebookOptionsPosition[     50322,        997]
+NotebookOutlinePosition[     50758,       1014]
+CellTagsIndexPosition[     50715,       1011]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Project 3 - Prefix Tree Generator", "Title",
+ CellChangeTimes->{{3.81726835979571*^9, 3.81726836296362*^9}, {
+  3.81731628946867*^9, 
+  3.817316302949512*^9}},ExpressionUUID->"9bf9913a-8a65-401f-8a96-\
+1dd58c4265d0"],
+
+Cell["\<\
+Weifeng Zhao
+Math 250 \
+\>", "Text",
+ CellChangeTimes->{{3.817268367995985*^9, 
+  3.81726837434272*^9}},ExpressionUUID->"6906e58f-c72c-4167-802f-\
+2ab207683d43"],
+
+Cell[TextData[{
+ "\n",
+ StyleBox["The inspiration of the app is from a class I took called CS 313 \
+Data Structure at Queens College. Data structure is one of the most important \
+courses and topic if you\[CloseCurlyQuote]re a computer science or related \
+field student, prefix expression and prefix tree is one of the many important \
+topics in this class and will be use in all upper levels CS classes and \
+topics, thus it\[CloseCurlyQuote]s a topic that you much learn it well and \
+understand it well. The goal of this app is to improve the user\
+\[CloseCurlyQuote]s ability of understanding these two topics, prefix \
+expression and prefix tree. \n\nThe topics I put in the app are real quiz or \
+exam question when I took CS313 at Queens college. The user of my app is \
+expected to be computer science or related field student, so it\
+\[CloseCurlyQuote]s expected the user have a basic understanding on prefix \
+expression and prefix tree to interact with this notebook. But everyone is \
+welcome to use my notebook and I have provided some examples on how to use \
+the app. I hope my user find this app useful and can actually help them on \
+these topics. \n\nAlternated topics: infix and postfix expression",
+  FontSize->16,
+  FontColor->RGBColor[0, 0, 1]]
+}], "Text",
+ CellChangeTimes->{{3.817268398886218*^9, 3.817268423277981*^9}, {
+  3.81726848026163*^9, 3.81726848816591*^9}, {3.81726852255059*^9, 
+  3.8172688208843117`*^9}, {3.817268859700789*^9, 3.817269299739925*^9}, {
+  3.817307215540956*^9, 
+  3.81730727062799*^9}},ExpressionUUID->"1a7b6e88-3c33-4d2e-b5fb-\
+20340219079c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "initialized", " ", "different", " ", "variable", " ", "names", " ", "and",
+     " ", "set", " ", "it", " ", "empty"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"user", " ", "=", " ", "\"\<\>\""}], ";"}], " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"ans", " ", "=", " ", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+   
+   RowBox[{
+    RowBox[{"depth", " ", "=", " ", "\"\<\>\""}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"head", " ", "=", " ", "\"\<\>\""}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"nodes", " ", "=", " ", "\"\<\>\""}], ";"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+    RowBox[{"(*", " ", 
+     RowBox[{
+     "initialized", " ", "different", " ", "boolean", " ", "variables", " ", 
+      "and", " ", "set", " ", "it", " ", "to", " ", "False"}], " ", "*)"}], 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"prefixboolen", " ", "=", " ", "False"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"headboolean", " ", "=", " ", "False"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"depthboolean", " ", "=", " ", "False"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"nodeboolen", " ", "=", " ", "False"}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"treeboolean", " ", "=", " ", "False"}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "initialized", " ", "different", " ", "variables", " ", "and", " ", 
+        "declare", " ", "different", " ", "equations", " ", "in", " ", "it"}],
+        " ", "*)"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "The", " ", "Level", " ", "method", " ", "can", " ", "find", " ", 
+        "the", " ", "prefix", " ", "expression", " ", "for", " ", "our", " ", 
+        "expression"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"prefix", " ", "=", " ", 
+       RowBox[{"Level", "[", " ", 
+        RowBox[{
+         RowBox[{"ToExpression", "[", "user", "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"-", "1"}], "}"}], ",", 
+         RowBox[{"Heads", "\[Rule]", " ", "True"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "The", " ", "Depth", " ", "method", " ", "can", " ", "find", " ", 
+        "the", " ", 
+        RowBox[{"depth", "/", "height"}], " ", "of", " ", "the", " ", "tree", 
+        " ", "for", " ", "our", " ", "expresison"}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{"depthequation", " ", "=", " ", 
+       RowBox[{"Depth", "[", 
+        RowBox[{"ToExpression", "[", "user", "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "The", " ", "LeafCount", " ", "will", " ", "count", " ", "how", " ", 
+        "many", " ", "nodes", " ", "exists", " ", "in", " ", "our", " ", 
+        "expression"}], " ", "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"leafsequation", " ", "=", " ", 
+       RowBox[{"LeafCount", "[", 
+        RowBox[{"ToExpression", "[", "user", "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "The", " ", "TreeForm", " ", "method", " ", "can", " ", "display", " ",
+         "the", " ", "tree", " ", "for", " ", "our", " ", "expression"}], " ",
+        "*)"}], "\[IndentingNewLine]", 
+      RowBox[{"treeequation", " ", "=", " ", 
+       RowBox[{"TreeForm", "[", 
+        RowBox[{"ToExpression", "[", "user", "]"}], "]"}]}], ";", 
+      "\[IndentingNewLine]", "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{
+       "The", " ", "Panel", " ", "method", " ", "will", " ", "organzied", " ",
+         "all", " ", "data", " ", "we", " ", "entered"}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{"Panel", "[", "\[IndentingNewLine]", 
+       RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+        RowBox[{
+         RowBox[{
+         "The", " ", "Style", " ", "method", " ", "allows", " ", "us", " ", 
+          "to", " ", "display", " ", "sepccified", " ", "option", " ", "like",
+           " ", "font"}], ",", " ", 
+         RowBox[{
+          RowBox[{"color", ".", "\[IndentingNewLine]", "The"}], " ", "Grid", 
+          " ", "method", " ", "formates", " ", "the", " ", "data", " ", 
+          "into", " ", "a", " ", "2", "D", " ", "grid"}]}], " ", 
+        "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"Style", "[", 
+        RowBox[{"Grid", "[", 
+         RowBox[{
+          RowBox[{"{", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+             RowBox[{
+             "Created", " ", "a", " ", "column", " ", "named", " ", 
+              "\"\<Equation\>\""}], ",", " ", 
+             RowBox[{
+             "it", " ", "will", " ", "store", " ", "the", " ", "data", " ", 
+              "from", " ", "variable", " ", "user"}]}], " ", "*)"}], 
+           "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Text", "[", "\"\< Equation\>\"", "]"}], ",", " ", 
+              "user"}], "}"}], ",", "\[IndentingNewLine]", 
+            "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+              RowBox[{
+              "Created", " ", "a", " ", "column", " ", "named", " ", 
+               "\"\<Root\>\""}], ",", " ", 
+              RowBox[{
+              "it", " ", "will", " ", "store", " ", "data", " ", "from", " ", 
+               "variable", " ", "head"}]}], " ", "*)"}], 
+            "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Text", "[", "\"\< Root \>\"", "]"}], ",", 
+              "\[IndentingNewLine]", " ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "If", " ", "variable", " ", "head", " ", "is", " ", "empty"}],
+                 ",", " ", 
+                RowBox[{"it", " ", "will", " ", "show", " ", 
+                 RowBox[{"nothing", ".", " ", "We"}], " ", "used", " ", 
+                 "\"\< \>\"", " ", "to", " ", "represent", " ", 
+                 RowBox[{"that", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "head", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "not", " ", "correct"}], ",", 
+                " ", 
+                RowBox[{
+                "it", " ", "will", " ", "display", " ", "a", " ", "random", 
+                 " ", "message", " ", "and", " ", "tell", " ", "the", " ", 
+                 "user", " ", "keep", " ", 
+                 RowBox[{"trying", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "head", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "correct"}], ",", " ", 
+                RowBox[{"it", " ", "will", " ", "display", " ", 
+                 RowBox[{"\"\<Correct\>\"", "."}]}]}], "\[IndentingNewLine]", 
+               " ", "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"WordCount", "[", "head", "]"}], " ", "==", " ", 
+                  "0"}], ",", "\"\< \>\"", " ", ",", " ", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"First", "@", "prefix"}], "===", 
+                    RowBox[{"ToExpression", "[", "head", "]"}]}], ",", 
+                   "\"\<Correct\>\"", ",", "\"\<Try Again!\>\""}], "]"}]}], 
+                "]"}], "]"}], ",", "\[IndentingNewLine]", "  ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "We", " ", "created", " ", "a", " ", "button", " ", "named", 
+                 " ", "\"\<Show root\>\""}], ",", " ", 
+                RowBox[{
+                "if", " ", "user", " ", "click", " ", "this", " ", "button"}],
+                 ",", " ", 
+                RowBox[{
+                "it", " ", "will", " ", "show", " ", "the", " ", "correct", 
+                 " ", "answer", " ", "of", " ", 
+                 RowBox[{"head", ".", "\[IndentingNewLine]", "If"}], " ", 
+                 "user", " ", 
+                 RowBox[{"didn", "'"}], "t", " ", "submit", " ", "a", " ", 
+                 "answer"}], ",", " ", 
+                RowBox[{"they", " ", 
+                 RowBox[{"won", "'"}], "t", " ", "able", " ", "to", " ", 
+                 "click", " ", "the", " ", "button", " ", "to", " ", "see", 
+                 " ", "the", " ", "correct", " ", 
+                 RowBox[{"answer", "."}]}]}], "\[IndentingNewLine]", " ", 
+               "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"Button", "[", 
+                RowBox[{"\"\<Show root\>\"", ",", " ", 
+                 RowBox[{"headboolean", "=", "True"}], ",", 
+                 RowBox[{"Enabled", "\[Rule]", 
+                  RowBox[{"(", 
+                   RowBox[{"head", "\[NotEqual]", "\"\<\>\""}], ")"}]}]}], 
+                "]"}], "]"}], ",", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{"headboolean", ",", 
+                 RowBox[{"First", "[", "prefix", "]"}], ",", "\"\< \>\""}], 
+                "]"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+              RowBox[{
+              "Created", " ", "a", " ", "column", " ", "named", " ", 
+               "\"\<Prefix Expression\>\""}], ",", " ", 
+              RowBox[{
+              "it", " ", "will", " ", "store", " ", "data", " ", "from", " ", 
+               "variable", " ", "ans"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Text", "[", "\"\< Prefix Expression \>\"", "]"}], ",", 
+              "\[IndentingNewLine]", " ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "If", " ", "variable", " ", "ans", " ", "is", " ", "empty"}], 
+                ",", " ", 
+                RowBox[{"it", " ", "will", " ", "show", " ", 
+                 RowBox[{"nothing", ".", " ", "We"}], " ", "used", " ", 
+                 "\"\< \>\"", " ", "to", " ", "represent", " ", 
+                 RowBox[{"that", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "ans", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "not", " ", "correct"}], ",", 
+                " ", 
+                RowBox[{
+                "it", " ", "will", " ", "display", " ", "a", " ", "random", 
+                 " ", "message", " ", "and", " ", "tell", " ", "the", " ", 
+                 "user", " ", "keep", " ", 
+                 RowBox[{"trying", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "ans", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "correct"}], ",", " ", 
+                RowBox[{"it", " ", "will", " ", "display", " ", 
+                 RowBox[{"\"\<Correct\>\"", "."}]}]}], "\[IndentingNewLine]", 
+               " ", "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"WordCount", "[", "ans", "]"}], " ", "==", " ", 
+                  "0"}], ",", "\"\< \>\"", " ", ",", " ", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"prefix", " ", "\[Equal]", " ", 
+                    RowBox[{"ToExpression", "[", "ans", "]"}]}], ",", 
+                   "\"\<Correct\>\"", ",", " ", "\"\<Try Again!\>\""}], 
+                  "]"}]}], "]"}], "]"}], ",", "\[IndentingNewLine]", "  ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "We", " ", "created", " ", "a", " ", "button", " ", "named", 
+                 " ", "\"\<Show Prefix\>\""}], ",", " ", 
+                RowBox[{
+                "if", " ", "user", " ", "click", " ", "this", " ", "button"}],
+                 ",", " ", 
+                RowBox[{
+                "it", " ", "will", " ", "show", " ", "the", " ", "correct", 
+                 " ", "answer", " ", "of", " ", 
+                 RowBox[{"prefix", ".", "\[IndentingNewLine]", "If"}], " ", 
+                 "user", " ", 
+                 RowBox[{"didn", "'"}], "t", " ", "submit", " ", "a", " ", 
+                 "answer"}], ",", " ", 
+                RowBox[{"they", " ", 
+                 RowBox[{"won", "'"}], "t", " ", "able", " ", "to", " ", 
+                 "click", " ", "the", " ", "button", " ", "to", " ", "see", 
+                 " ", "the", " ", "correct", " ", 
+                 RowBox[{"answer", "."}]}]}], "\[IndentingNewLine]", " ", 
+               "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"Button", "[", 
+                RowBox[{"\"\<Show Prefix\>\"", ",", " ", 
+                 RowBox[{"prefixboolen", "=", "True"}], ",", 
+                 RowBox[{"Enabled", "\[Rule]", 
+                  RowBox[{"(", 
+                   RowBox[{"ans", "\[NotEqual]", "\"\<\>\""}], ")"}]}]}], 
+                "]"}], "]"}], ",", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{"prefixboolen", ",", "prefix", ",", "\"\< \>\""}], 
+                "]"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+              RowBox[{
+              "Created", " ", "a", " ", "column", " ", "named", " ", 
+               "\"\<Depth\>\""}], ",", " ", 
+              RowBox[{
+              "it", " ", "will", " ", "store", " ", "data", " ", "from", " ", 
+               "variable", " ", "depth"}]}], " ", "*)"}], 
+            "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Text", "[", "\"\< Depth \>\"", "]"}], ",", 
+              "\[IndentingNewLine]", " ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "If", " ", "variable", " ", "depth", " ", "is", " ", 
+                 "empty"}], ",", " ", 
+                RowBox[{"it", " ", "will", " ", "show", " ", 
+                 RowBox[{"nothing", ".", " ", "We"}], " ", "used", " ", 
+                 "\"\< \>\"", " ", "to", " ", "represent", " ", 
+                 RowBox[{"that", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "depth", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "not", " ", "correct"}], ",", 
+                " ", 
+                RowBox[{
+                "it", " ", "will", " ", "display", " ", "a", " ", "random", 
+                 " ", "message", " ", "and", " ", "tell", " ", "the", " ", 
+                 "user", " ", "keep", " ", 
+                 RowBox[{"trying", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "depth", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "correct"}], ",", " ", 
+                RowBox[{"it", " ", "will", " ", "display", " ", 
+                 RowBox[{"\"\<Correct\>\"", "."}]}]}], "\[IndentingNewLine]", 
+               " ", "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", "  ", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"NumberQ", "[", "depth", "]"}], " ", "\[Equal]", 
+                  " ", "False"}], ",", " ", "\"\< \>\"", " ", ",", " ", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"depthequation", " ", "\[Equal]", " ", "depth"}], 
+                   ",", "\"\<Correct\>\"", ",", 
+                   RowBox[{"RandomChoice", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Try Again!\>\"", ",", "\"\<Close!\>\"", ",", 
+                    "\"\<Almost!\>\"", ",", "\"\<One More Time!\>\"", ",", 
+                    "\"\<Don't Give Up!\>\"", ",", " ", 
+                    "\"\<Almost There!\>\""}], "}"}], "]"}]}], " ", "]"}]}], 
+                "]"}], "]"}], ",", "\[IndentingNewLine]", "  ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "We", " ", "created", " ", "a", " ", "button", " ", "named", 
+                 " ", "\"\<Show Depth\>\""}], ",", " ", 
+                RowBox[{
+                "if", " ", "user", " ", "click", " ", "this", " ", "button"}],
+                 ",", " ", 
+                RowBox[{
+                "it", " ", "will", " ", "show", " ", "the", " ", "correct", 
+                 " ", "answer", " ", "of", " ", 
+                 RowBox[{"depth", ".", "\[IndentingNewLine]", "If"}], " ", 
+                 "user", " ", 
+                 RowBox[{"didn", "'"}], "t", " ", "submit", " ", "a", " ", 
+                 "answer"}], ",", " ", 
+                RowBox[{"they", " ", 
+                 RowBox[{"won", "'"}], "t", " ", "able", " ", "to", " ", 
+                 "click", " ", "the", " ", "button", " ", "to", " ", "see", 
+                 " ", "the", " ", "correct", " ", 
+                 RowBox[{"answer", "."}]}]}], "\[IndentingNewLine]", " ", 
+               "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"Button", "[", 
+                RowBox[{"\"\<Show Depth\>\"", ",", " ", 
+                 RowBox[{"depthboolean", "=", "True"}], ",", 
+                 RowBox[{"Enabled", "\[Rule]", 
+                  RowBox[{"(", 
+                   RowBox[{"depth", "\[NotEqual]", " ", "\"\<\>\""}], 
+                   ")"}]}]}], "]"}], "]"}], ",", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                "depthboolean", ",", "depthequation", ",", "\"\< \>\""}], 
+                "]"}], "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+              RowBox[{
+              "Created", " ", "a", " ", "column", " ", "named", " ", 
+               "\"\<Nodes\>\""}], ",", " ", 
+              RowBox[{
+              "it", " ", "will", " ", "store", " ", "data", " ", "from", " ", 
+               "variable", " ", "nodes"}]}], " ", "*)"}], 
+            "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Text", "[", "\"\< Nodes \>\"", "]"}], ",", 
+              "\[IndentingNewLine]", " ", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "If", " ", "variable", " ", "nodes", " ", "is", " ", 
+                 "empty"}], ",", " ", 
+                RowBox[{"it", " ", "will", " ", "show", " ", 
+                 RowBox[{"nothing", ".", " ", "We"}], " ", "used", " ", 
+                 "\"\<\>\"", " ", "to", " ", "represent", " ", 
+                 RowBox[{"that", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "nodes", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "not", " ", "correct"}], ",", 
+                " ", 
+                RowBox[{
+                "it", " ", "will", " ", "display", " ", "a", " ", "random", 
+                 " ", "message", " ", "and", " ", "tell", " ", "the", " ", 
+                 "user", " ", "keep", " ", 
+                 RowBox[{"trying", ".", "\[IndentingNewLine]", "IF"}], " ", 
+                 "the", " ", "nodes", " ", "enter", " ", "from", " ", "the", 
+                 " ", "user", " ", "is", " ", "correct"}], ",", " ", 
+                RowBox[{"it", " ", "will", " ", "display", " ", 
+                 RowBox[{"\"\<Correct\>\"", "."}]}]}], "\[IndentingNewLine]", 
+               " ", "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", " ", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"NumberQ", "[", "nodes", "]"}], " ", "\[Equal]", 
+                  " ", "False"}], ",", " ", "\"\<\>\"", " ", ",", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"leafsequation", " ", "\[Equal]", " ", "nodes"}], 
+                   ",", "\"\<Correct\>\"", ",", " ", 
+                   RowBox[{"RandomChoice", "[", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    "\"\<Try Again!\>\"", ",", "\"\<Close!\>\"", ",", 
+                    "\"\<Almost!\>\"", ",", "\"\<One More Time!\>\"", ",", 
+                    "\"\<Don't Give Up!\>\"", ",", " ", 
+                    "\"\<Almost There!\>\""}], "}"}], "]"}]}], "   ", "]"}]}],
+                 "]"}], "]"}], ",", "\[IndentingNewLine]", 
+              RowBox[{"(*", "\[IndentingNewLine]", "  ", 
+               RowBox[{
+                RowBox[{
+                "We", " ", "created", " ", "a", " ", "button", " ", "named", 
+                 " ", "\"\<Show Nodes\>\""}], ",", " ", 
+                RowBox[{
+                "if", " ", "user", " ", "click", " ", "this", " ", "button"}],
+                 ",", " ", 
+                RowBox[{
+                "it", " ", "will", " ", "show", " ", "the", " ", "correct", 
+                 " ", "answer", " ", "of", " ", 
+                 RowBox[{"nodes", ".", "\[IndentingNewLine]", "If"}], " ", 
+                 "user", " ", 
+                 RowBox[{"didn", "'"}], "t", " ", "submit", " ", "a", " ", 
+                 "answer"}], ",", " ", 
+                RowBox[{"they", " ", 
+                 RowBox[{"won", "'"}], "t", " ", "able", " ", "to", " ", 
+                 "click", " ", "the", " ", "button", " ", "to", " ", "see", 
+                 " ", "the", " ", "correct", " ", 
+                 RowBox[{"answer", "."}]}]}], "\[IndentingNewLine]", " ", 
+               "*)"}], "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"Button", "[", 
+                RowBox[{"\"\<Show Nodes\>\"", ",", " ", 
+                 RowBox[{"nodeboolen", "=", "True"}], ",", 
+                 RowBox[{"Enabled", "\[Rule]", 
+                  RowBox[{"(", 
+                   RowBox[{"nodes", "\[NotEqual]", " ", "\"\<\>\""}], 
+                   ")"}]}]}], "]"}], "]"}], ",", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                "nodeboolen", ",", "leafsequation", ",", "\"\< \>\""}], "]"}],
+                "]"}]}], "\[IndentingNewLine]", "}"}], ",", 
+            "\[IndentingNewLine]", "\[IndentingNewLine]", 
+            RowBox[{"(*", " ", 
+             RowBox[{
+             "Created", " ", "a", " ", "column", " ", "named", " ", 
+              "\"\<Tree\>\""}], " ", "*)"}], "\[IndentingNewLine]", 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"Text", "[", "\"\< Tree \>\"", "]"}], ",", 
+              "\"\< Try Drawing the Tree before seeing the answer \>\"", ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", " ", 
+               RowBox[{
+                RowBox[{
+                "We", " ", "created", " ", "a", " ", "button", " ", "named", 
+                 " ", "\"\<Show Tree\>\""}], ",", " ", 
+                RowBox[{
+                "if", " ", "user", " ", "click", " ", "this", " ", "button"}],
+                 ",", " ", 
+                RowBox[{
+                "it", " ", "will", " ", "show", " ", "the", " ", "correct", 
+                 " ", "tree", " ", "of", " ", "the", " ", 
+                 RowBox[{"expression", "."}]}]}], " ", "*)"}], 
+              "\[IndentingNewLine]", "   ", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"Button", "[", 
+                RowBox[{"\"\<Show Tree\>\"", ",", " ", 
+                 RowBox[{"treeboolean", "=", "True"}]}], "]"}], "]"}], ",", 
+              RowBox[{"Dynamic", "[", 
+               RowBox[{"If", "[", 
+                RowBox[{
+                "treeboolean", ",", "treeequation", ",", "\"\< \>\""}], "]"}],
+                "]"}]}], "\[IndentingNewLine]", "}"}]}], 
+           "\[IndentingNewLine]", "}"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+           "The", " ", "Frame", " ", "creates", " ", "a", " ", "table", " ", 
+            "for", " ", "our", " ", "datas"}], " ", "*)"}], 
+          "\[IndentingNewLine]", 
+          RowBox[{"Frame", "\[Rule]", "All"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"(*", " ", 
+           RowBox[{
+            RowBox[{"Set", " ", "ItemSize", " ", "to", " ", "x"}], " ", "=", 
+            " ", 
+            RowBox[{
+             RowBox[{"35", " ", "and", " ", "y"}], " ", "=", " ", "3"}]}], 
+           " ", "*)"}], "\[IndentingNewLine]", 
+          RowBox[{"ItemSize", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"35", ",", "3"}], "}"}]}]}], "\[IndentingNewLine]", "]"}],
+         "]"}], "]"}]}], ",", "\[IndentingNewLine]", "\t", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+       RowBox[{
+       "Created", " ", "the", " ", "title", " ", "named", " ", 
+        "\"\<Prefix Tree Generator\>\"", " ", "in", " ", 
+        RowBox[{"font", ":", "Times"}]}], ",", " ", 
+       RowBox[{"size", ":", 
+        RowBox[{
+        "20", " ", "and", " ", "display", " ", "in", " ", "color", " ", 
+         "red"}]}]}], " ", "*)"}], "\[IndentingNewLine]", "\t", 
+     RowBox[{"Style", "[", 
+      RowBox[{"\"\<Prefix Tree Generator\>\"", ",", 
+       RowBox[{"FontFamily", "\[Rule]", " ", "\"\<Times\>\""}], ",", 
+       RowBox[{"FontSize", "\[Rule]", "20"}], ",", "Red"}], "]"}], ",", 
+     "     ", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{"(*", " ", 
+      RowBox[{
+      "Definition", " ", "and", " ", "Example", " ", "for", " ", "the", " ", 
+       "notebook"}], " ", "*)"}], "\t\t", 
+     RowBox[{"Style", "[", 
+      RowBox[{
+      "\"\<Prefix: An expression is called the prefix expression if the \
+operator appears in the expression before the operands. Simply of the form \
+(operator operand1 operand2). \nExample : *+AB-CD (Infix : (A+B) * (C-D) )\n\n\
+The benefits of prefix notation\nImagine both the above expressions are \
+unclear. However in the prefix version you do not have to ever think about \
+the precedence of operators.\nBecause each expression has the operator before \
+all the operands and the entire expression is wrapped in parentheses, all \
+precedence is explicit.\n\nRule: <root> <left> < rigth> \n\nExample:\nInfix:  \
+1 + 2 / 3\nPrefix: (+ 1 (/ 2 3))\n\nexample expression: 2 * (a + 2) - c \n\n  \
+       Plus            \n       /        \\\\      \n  Times     Times\n  /   \
+\\\\           /   \\\\      \n 2   Plus   -1    c        \n     /   \\\\     \
+         \n     2   a       \n\nCan you solve these expression?\n   -8 + a ( \
+2 * c ) + (a + c) - 2\n   Sin[x] + (a * 2 )  - b \n   - b + (Tan[b] + \
+Sin[a*c] - c) + ( a * c ) + 2 \n\nPrefix is just one of the three expressions \
+on this topic, the other two are infix and postfix. They usually will test \
+you all three expressions at once.\>\"", ",", 
+       RowBox[{"FontFamily", " ", "\[Rule]", " ", "\"\<Times\>\""}], ",", 
+       RowBox[{"FontSize", "\[Rule]", "13"}]}], "]"}], ",", 
+     "\[IndentingNewLine]", 
+     "                                                                        \
+                                                                              \
+                                                                              \
+                                                                              \
+                                                                              \
+                          ", "\[IndentingNewLine]", "\n", 
+     RowBox[{"DynamicModule", "[", 
+      RowBox[{
+       RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", "\[IndentingNewLine]", " ", 
+        RowBox[{
+        "Create", " ", "a", " ", "panel", " ", "to", " ", "store", " ", "the",
+          " ", "input", " ", "fields", "\[IndentingNewLine]", "The", " ", 
+         "Transpose", " ", "method", " ", "will", " ", "make", " ", "the", 
+         " ", "input", " ", "fields", " ", "display", " ", "like", " ", 
+         "rows"}], "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"Style", "[", 
+        RowBox[{"Panel", "[", 
+         RowBox[{"Grid", "[", 
+          RowBox[{
+           RowBox[{"Transpose", "[", 
+            RowBox[{"{", " ", "\[IndentingNewLine]", 
+             RowBox[{"(*", " ", 
+              RowBox[{
+              "Creadted", " ", "Texts", " ", "for", " ", "the", " ", "input", 
+               " ", "field"}], " ", "*)"}], "\[IndentingNewLine]", 
+             RowBox[{
+              RowBox[{"{", " ", 
+               RowBox[{
+                RowBox[{"Style", "[", 
+                 RowBox[{"\"\<Please Enter your expression\>\"", ",", "Red"}],
+                  "]"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"Style", "[", 
+                 RowBox[{
+                 "\"\<Please Enter the root here\>\"", ",", " ", "Red"}], 
+                 "]"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"Style", "[", 
+                 RowBox[{
+                 "\"\<Please Enter the expected prefix here\>\"", ",", " ", 
+                  "Red"}], "]"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"Style", "[", 
+                 RowBox[{
+                 "\"\<Please Enter the expected Depth here\>\"", ",", " ", 
+                  "Red"}], "]"}], ",", "\[IndentingNewLine]", 
+                RowBox[{"Style", "[", 
+                 RowBox[{
+                 "\"\<Please Enter the expected nodes here\>\"", ",", " ", 
+                  "Red"}], "]"}], ","}], "\[IndentingNewLine]", "}"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", " ", "\[IndentingNewLine]", "   ", 
+               RowBox[{
+               "Created", " ", "input", " ", "fields", " ", "for", " ", 
+                "user", " ", "to", " ", "enter", " ", "their", " ", 
+                RowBox[{"answer", ".", "\[IndentingNewLine]", " ", "The"}], 
+                " ", "FieldHint", " ", "method", " ", "will", " ", "give", 
+                " ", "the", " ", "user", " ", "a", " ", "hints", " ", "about",
+                 " ", "the", " ", "correct", " ", 
+                RowBox[{"answer", ".", "\[IndentingNewLine]", " ", "The"}], 
+                " ", "FieldSize", " ", "set", " ", "the", " ", "input", " ", 
+                "field", " ", "size", " ", "of", " ", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"25", ",", "1.5"}], "}"}], "."}]}], 
+               "\[IndentingNewLine]", " ", "*)"}], "\[IndentingNewLine]", " ", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "user", "]"}], ",", "String", ",", 
+                  " ", 
+                  RowBox[{
+                  "FieldHint", "\[Rule]", 
+                   "\"\<Enter an expression here\>\""}], ",", 
+                  RowBox[{"FieldSize", "\[Rule]", 
+                   RowBox[{"{", 
+                    RowBox[{"25", ",", "1.5"}], "}"}]}]}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "head", "]"}], ",", "String", ",", 
+                  " ", 
+                  RowBox[{
+                  "FieldHint", "\[Rule]", 
+                   "\"\<Heads? First element in the expression?\>\""}], ",", 
+                  RowBox[{"FieldSize", "\[Rule]", 
+                   RowBox[{"{", 
+                    RowBox[{"25", ",", "1.5"}], "}"}]}]}], "]"}], ",", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "ans", "]"}], ",", "String", ",", 
+                  " ", 
+                  RowBox[{
+                  "FieldHint", "\[Rule]", "\"\<Put your answer in { } \>\""}],
+                   ",", 
+                  RowBox[{"FieldSize", "\[Rule]", 
+                   RowBox[{"{", 
+                    RowBox[{"25", ",", "1.5"}], "}"}]}]}], "]"}], ",", " ", 
+                "\[IndentingNewLine]", 
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "depth", "]"}], ",", "Number", ",", 
+                  
+                  RowBox[{"FieldHint", "\[Rule]", "\"\<Height?\>\""}], ",", 
+                  RowBox[{"FieldSize", "\[Rule]", 
+                   RowBox[{"{", 
+                    RowBox[{"25", ",", "1.5"}], "}"}]}]}], "]"}], ",", 
+                "\[IndentingNewLine]", 
+                RowBox[{"InputField", "[", 
+                 RowBox[{
+                  RowBox[{"Dynamic", "[", "nodes", "]"}], ",", "Number", ",", 
+                  
+                  RowBox[{
+                  "FieldHint", "\[Rule]", 
+                   "\"\<nodes in the expression ?\>\""}], ",", 
+                  RowBox[{"FieldSize", "\[Rule]", 
+                   RowBox[{"{", 
+                    RowBox[{"25", ",", "1.5"}], "}"}]}]}], "]"}], ","}], 
+               "\[IndentingNewLine]", "}"}]}], "\[IndentingNewLine]", "}"}], 
+            "]"}], ",", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+            "All", " ", "texts", " ", "are", " ", "aligned", " ", "to", " ", 
+             "the", " ", "right"}], " ", "*)"}], "\[IndentingNewLine]", 
+           RowBox[{"Alignment", "\[Rule]", "Right"}]}], "]"}], "]"}], "]"}]}],
+       "]"}]}], "]"}], "\[IndentingNewLine]", 
+   "\[IndentingNewLine]"}]}]], "Input",
+ CellChangeTimes->{{3.81680100227295*^9, 3.8168010026114063`*^9}, {
+   3.816801051448472*^9, 3.816801089948493*^9}, {3.81680112827719*^9, 
+   3.816801131295936*^9}, {3.816968926081299*^9, 3.816968927464551*^9}, {
+   3.817237168922134*^9, 3.817237185989951*^9}, {3.817237665087598*^9, 
+   3.817237742171061*^9}, {3.817239041221014*^9, 3.817239048321055*^9}, {
+   3.8172391482912693`*^9, 3.8172393345741167`*^9}, {3.817239548500208*^9, 
+   3.817239565047422*^9}, {3.817239611011125*^9, 3.8172396365614977`*^9}, {
+   3.817252526877586*^9, 3.8172525300492573`*^9}, {3.817258062860767*^9, 
+   3.817258093718927*^9}, {3.8172582475901127`*^9, 3.817258248956918*^9}, {
+   3.8172582945869493`*^9, 3.817258303808936*^9}, {3.8172592849207706`*^9, 
+   3.817259287740423*^9}, {3.81725932496699*^9, 3.817259347968174*^9}, {
+   3.817259902533396*^9, 3.8172599350191097`*^9}, {3.817259966697865*^9, 
+   3.817260011530616*^9}, {3.817260584954842*^9, 3.81726058553162*^9}, {
+   3.817260703599987*^9, 3.817260716816815*^9}, {3.8172608491901703`*^9, 
+   3.817260879724002*^9}, {3.817261090838365*^9, 3.817261092208146*^9}, {
+   3.817261770552864*^9, 3.817261781923821*^9}, {3.817261902129887*^9, 
+   3.817261940922577*^9}, {3.8172620939249773`*^9, 3.817262209486215*^9}, {
+   3.817262266845583*^9, 3.8172622957203407`*^9}, {3.817262332240295*^9, 
+   3.817262422771031*^9}, {3.817262787433908*^9, 3.817262805764039*^9}, {
+   3.817262846631085*^9, 3.8172630486421757`*^9}, {3.817263112613361*^9, 
+   3.817263746330682*^9}, {3.817263939164919*^9, 3.817264480352838*^9}, {
+   3.817265412738365*^9, 3.8172656873368883`*^9}, {3.8172659367714043`*^9, 
+   3.8172659613854237`*^9}, {3.81726601311337*^9, 3.817266033130639*^9}, {
+   3.817266409244095*^9, 3.817266410184559*^9}, {3.817266602539652*^9, 
+   3.817266609633395*^9}, 3.817266662903001*^9, {3.8172667406648283`*^9, 
+   3.817266753115305*^9}, {3.817266830139023*^9, 3.817266871649455*^9}, 
+   3.817267060626732*^9, {3.817267148741849*^9, 3.817267267667626*^9}, 
+   3.8172674995105047`*^9, {3.817267549727841*^9, 3.8172675587956753`*^9}, {
+   3.817267604355052*^9, 3.817267605262376*^9}, 3.817267637446175*^9, {
+   3.81726768475387*^9, 3.8172677164785557`*^9}, {3.817267750230747*^9, 
+   3.817267783569396*^9}, {3.817267923968937*^9, 3.817267927226956*^9}, {
+   3.817268088935865*^9, 3.817268186535845*^9}, {3.817268222673774*^9, 
+   3.81726831352461*^9}, {3.8172683451863413`*^9, 3.817268351300601*^9}, {
+   3.81727012150079*^9, 3.817270145037662*^9}, {3.817270313802135*^9, 
+   3.817270348938291*^9}, {3.817270398628203*^9, 3.817270433738662*^9}, {
+   3.817270516021677*^9, 3.8172705271331387`*^9}, {3.817307960400035*^9, 
+   3.817308024426241*^9}, {3.8173163584645557`*^9, 3.817316362353157*^9}},
+ CellLabel->"In[5]:=",ExpressionUUID->"4792d251-3657-4428-ad89-a2200c204440"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Prefix Tree Generator", FontFamily -> "Times", FontSize -> 20, 
+        RGBColor[1, 0, 0]]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Style[
+       "Prefix: An expression is called the prefix expression if the operator \
+appears in the expression before the operands. Simply of the form (operator \
+operand1 operand2). \nExample : *+AB-CD (Infix : (A+B) * (C-D) )\n\nThe \
+benefits of prefix notation\nImagine both the above expressions are unclear. \
+However in the prefix version you do not have to ever think about the \
+precedence of operators.\nBecause each expression has the operator before all \
+the operands and the entire expression is wrapped in parentheses, all \
+precedence is explicit.\n\nRule: <root> <left> < rigth> \n\nExample:\nInfix:  \
+1 + 2 / 3\nPrefix: (+ 1 (/ 2 3))\n\nexample expression: 2 * (a + 2) - c \n\n  \
+       Plus            \n       /        \\      \n  Times     Times\n  /   \
+\\           /   \\      \n 2   Plus   -1    c        \n     /   \\           \
+   \n     2   a       \n\nCan you solve these expression?\n   -8 + a ( 2 * c \
+) + (a + c) - 2\n   Sin[x] + (a * 2 )  - b \n   - b + (Tan[b] + Sin[a*c] - c) \
++ ( a * c ) + 2 \n\nPrefix is just one of the three expressions on this \
+topic, the other two are infix and postfix. They usually will test you all \
+three expressions at once.", FontFamily -> "Times", FontSize -> 13]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       DynamicModule[{}, 
+        Style[
+         Panel[
+          Grid[{{
+             Style["Please Enter your expression", 
+              RGBColor[1, 0, 0]], 
+             InputField[
+              Dynamic[$CellContext`user], String, FieldHint -> 
+              "Enter an expression here", FieldSize -> {25, 1.5}]}, {
+             Style["Please Enter the root here", 
+              RGBColor[1, 0, 0]], 
+             InputField[
+              Dynamic[$CellContext`head], String, FieldHint -> 
+              "Heads? First element in the expression?", 
+              FieldSize -> {25, 1.5}]}, {
+             Style["Please Enter the expected prefix here", 
+              RGBColor[1, 0, 0]], 
+             InputField[
+              Dynamic[$CellContext`ans], String, FieldHint -> 
+              "Put your answer in { } ", FieldSize -> {25, 1.5}]}, {
+             Style["Please Enter the expected Depth here", 
+              RGBColor[1, 0, 0]], 
+             InputField[
+              Dynamic[$CellContext`depth], Number, FieldHint -> "Height?", 
+              FieldSize -> {25, 1.5}]}, {
+             Style["Please Enter the expected nodes here", 
+              RGBColor[1, 0, 0]], 
+             InputField[
+              Dynamic[$CellContext`nodes], Number, FieldHint -> 
+              "nodes in the expression ?", FieldSize -> {25, 1.5}]}, {
+            Null, Null}}, Alignment -> Right]]], DynamicModuleValues :> {}]], 
+      Manipulate`Dump`ThisIsNotAControl}}, Typeset`size$$ = {
+    1297., {119., 125.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, "Variables" :> {}, "ControllerVariables" :> {}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`prefixboolen = False; $CellContext`headboolean = 
+        False; $CellContext`depthboolean = False; $CellContext`nodeboolen = 
+        False; $CellContext`treeboolean = False; $CellContext`prefix = Level[
+          ToExpression[$CellContext`user], {-1}, Heads -> 
+          True]; $CellContext`depthequation = Depth[
+          ToExpression[$CellContext`user]]; $CellContext`leafsequation = 
+        LeafCount[
+          ToExpression[$CellContext`user]]; $CellContext`treeequation = 
+        TreeForm[
+          ToExpression[$CellContext`user]]; Panel[
+         Style[
+          Grid[{{
+             Text[" Equation"], $CellContext`user}, {
+             Text[" Root "], 
+             Dynamic[
+              If[WordCount[$CellContext`head] == 0, " ", 
+               If[
+               First[$CellContext`prefix] === ToExpression[$CellContext`head],
+                 "Correct", "Try Again!"]]], 
+             Dynamic[
+              Button[
+              "Show root", $CellContext`headboolean = True, 
+               Enabled -> $CellContext`head != ""]], 
+             Dynamic[
+              If[$CellContext`headboolean, 
+               First[$CellContext`prefix], " "]]}, {
+             Text[" Prefix Expression "], 
+             Dynamic[
+              If[WordCount[$CellContext`ans] == 0, " ", 
+               
+               If[$CellContext`prefix == ToExpression[$CellContext`ans], 
+                "Correct", "Try Again!"]]], 
+             Dynamic[
+              Button[
+              "Show Prefix", $CellContext`prefixboolen = True, 
+               Enabled -> $CellContext`ans != ""]], 
+             Dynamic[
+              If[$CellContext`prefixboolen, $CellContext`prefix, " "]]}, {
+             Text[" Depth "], 
+             Dynamic[
+              If[NumberQ[$CellContext`depth] == False, " ", 
+               If[$CellContext`depthequation == $CellContext`depth, "Correct", 
+                
+                RandomChoice[{
+                 "Try Again!", "Close!", "Almost!", "One More Time!", 
+                  "Don't Give Up!", "Almost There!"}]]]], 
+             Dynamic[
+              Button[
+              "Show Depth", $CellContext`depthboolean = True, 
+               Enabled -> $CellContext`depth != ""]], 
+             Dynamic[
+              
+              If[$CellContext`depthboolean, $CellContext`depthequation, 
+               " "]]}, {
+             Text[" Nodes "], 
+             Dynamic[
+              If[NumberQ[$CellContext`nodes] == False, "", 
+               If[$CellContext`leafsequation == $CellContext`nodes, "Correct", 
+                
+                RandomChoice[{
+                 "Try Again!", "Close!", "Almost!", "One More Time!", 
+                  "Don't Give Up!", "Almost There!"}]]]], 
+             Dynamic[
+              Button[
+              "Show Nodes", $CellContext`nodeboolen = True, 
+               Enabled -> $CellContext`nodes != ""]], 
+             Dynamic[
+              If[$CellContext`nodeboolen, $CellContext`leafsequation, " "]]}, {
+             Text[" Tree "], 
+             " Try Drawing the Tree before seeing the answer ", 
+             Dynamic[
+              Button["Show Tree", $CellContext`treeboolean = True]], 
+             Dynamic[
+              If[$CellContext`treeboolean, $CellContext`treeequation, " "]]}},
+            Frame -> All, ItemSize -> {35, 3}]]]), "Specifications" :> {
+        Style[
+        "Prefix Tree Generator", FontFamily -> "Times", FontSize -> 20, 
+         RGBColor[1, 0, 0]], 
+        Style[
+        "Prefix: An expression is called the prefix expression if the \
+operator appears in the expression before the operands. Simply of the form \
+(operator operand1 operand2). \nExample : *+AB-CD (Infix : (A+B) * (C-D) )\n\n\
+The benefits of prefix notation\nImagine both the above expressions are \
+unclear. However in the prefix version you do not have to ever think about \
+the precedence of operators.\nBecause each expression has the operator before \
+all the operands and the entire expression is wrapped in parentheses, all \
+precedence is explicit.\n\nRule: <root> <left> < rigth> \n\nExample:\nInfix:  \
+1 + 2 / 3\nPrefix: (+ 1 (/ 2 3))\n\nexample expression: 2 * (a + 2) - c \n\n  \
+       Plus            \n       /        \\      \n  Times     Times\n  /   \
+\\           /   \\      \n 2   Plus   -1    c        \n     /   \\           \
+   \n     2   a       \n\nCan you solve these expression?\n   -8 + a ( 2 * c \
+) + (a + c) - 2\n   Sin[x] + (a * 2 )  - b \n   - b + (Tan[b] + Sin[a*c] - c) \
++ ( a * c ) + 2 \n\nPrefix is just one of the three expressions on this \
+topic, the other two are infix and postfix. They usually will test you all \
+three expressions at once.", FontFamily -> "Times", FontSize -> 13], 
+        DynamicModule[{}, 
+         Style[
+          Panel[
+           Grid[{{
+              Style["Please Enter your expression", 
+               RGBColor[1, 0, 0]], 
+              InputField[
+               Dynamic[$CellContext`user], String, FieldHint -> 
+               "Enter an expression here", FieldSize -> {25, 1.5}]}, {
+              Style["Please Enter the root here", 
+               RGBColor[1, 0, 0]], 
+              InputField[
+               Dynamic[$CellContext`head], String, FieldHint -> 
+               "Heads? First element in the expression?", 
+               FieldSize -> {25, 1.5}]}, {
+              Style["Please Enter the expected prefix here", 
+               RGBColor[1, 0, 0]], 
+              InputField[
+               Dynamic[$CellContext`ans], String, FieldHint -> 
+               "Put your answer in { } ", FieldSize -> {25, 1.5}]}, {
+              Style["Please Enter the expected Depth here", 
+               RGBColor[1, 0, 0]], 
+              InputField[
+               Dynamic[$CellContext`depth], Number, FieldHint -> "Height?", 
+               FieldSize -> {25, 1.5}]}, {
+              Style["Please Enter the expected nodes here", 
+               RGBColor[1, 0, 0]], 
+              InputField[
+               Dynamic[$CellContext`nodes], Number, FieldHint -> 
+               "nodes in the expression ?", FieldSize -> {25, 1.5}]}, {
+             Null, Null}}, Alignment -> Right]]], DynamicModuleValues :> {}]},
+       "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{1342., {502., 508.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.817321817726679*^9, 3.8173218451186447`*^9}, 
+   3.81732191606733*^9, 3.82625051371103*^9, 3.827548767087253*^9},
+ CellLabel->"Out[10]=",ExpressionUUID->"b8c487c4-5626-400b-981b-a00cd6f873c4"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1527, 1113},
+WindowMargins->{{407, Automatic}, {81, Automatic}},
+TaggingRules->{"TryRealOnly" -> False},
+FrontEndVersion->"12.1 for Mac OS X x86 (64-bit) (June 19, 2020)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"826bffee-6d33-4445-b912-70c5c730b169"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 222, 4, 98, "Title",ExpressionUUID->"9bf9913a-8a65-401f-8a96-1dd58c4265d0"],
+Cell[805, 28, 171, 6, 58, "Text",ExpressionUUID->"6906e58f-c72c-4167-802f-2ab207683d43"],
+Cell[979, 36, 1596, 26, 251, "Text",ExpressionUUID->"1a7b6e88-3c33-4d2e-b5fb-20340219079c"],
+Cell[CellGroupData[{
+Cell[2600, 66, 37098, 715, 3832, "Input",ExpressionUUID->"4792d251-3657-4428-ad89-a2200c204440"],
+Cell[39701, 783, 10593, 210, 1029, "Output",ExpressionUUID->"b8c487c4-5626-400b-981b-a00cd6f873c4"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
